@@ -1,6 +1,16 @@
 
 
-num1 = int(input('정수 1: '))
-num2 = int(input('정수 2: '))
-total = int(input(f'5~8까지의 총합: {num1 + num2}'))
+#x~y까지의 총합
+x = int(input('정수1: '))
+y = int(input('정수2: '))
+
+total = 0
+n = 5
+
+while n <= y:
+    total += n
+    n += 1
+    
+
+print(f'{x}~{y}까지의 총합: {total}')
 
