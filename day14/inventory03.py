@@ -58,7 +58,7 @@ if __name__ == '__main__':
             print('=' * 60)
             print('제품번호    제품명    단가    수량    제품총액')
             print('=' * 60)
-            print('{} {}    {}원    {}개    {}원'.format())
+            
             print(inventory)
         elif menu == '3':
             pass
