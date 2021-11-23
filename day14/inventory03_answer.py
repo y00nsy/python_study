@@ -1,9 +1,64 @@
+
+# 세이브파일 관련 모듈
+import sys
+import os
+import pickle
+
 #전역정의부
-inventory = []
+dir_name = 'D:/isec_ysyy/py_study/inventory/'
+file_name = 'inventory.sav'
 
-#함수정의부
+inventory = [{
+    '제품번호': 'a001',
+    '제품명': '청소기',
+    '가격': 50000,
+    '수량': 4,
+    '총액': 200000
+},
+{
+    '제품번호': 'a002',
+    '제품명': '에어컨',
+    '가격': 700000,
+    '수량': 6,
+    '총액': 420000
+},
+{
+    '제품번호': 'a003',
+    '제품명': '냉장고',
+    '가격': 1000000,
+    '수량': 3,
+    '총액': 3000000
+}]
 
-    # 제품번호의 중복을 확인하는 함수
+#======= 함수정의부 =======#
+
+# 세이브 파일 생성 함수
+def save_inventory():
+    if not os.path.isdir(dir_name):
+        os.mkdir(dir_name)
+
+    try:
+        # b모드는 딕셔너리나 리스트같은 객체를 통째로 넣을 때 사용하는 모드
+        f = open(dir_name+file_name, 'wb')
+        pickle.dump(inventory, f) #리스트를 통째로 세이브파일에 저장
+    except:
+        print('파일 저장 실패')
+    finally:
+        f.close()
+
+# 파일 로드 기능 함수
+def load_inventory():
+    global inventory    # 전역변수 inventory를 활용하라 - global
+
+    try:
+        f = open(dir_name+file_name, 'rb')
+        inventory = pickle.load(f)
+    except:
+        print('파일 로드 실패')
+    finally:
+        f.close()
+
+# 제품번호의 중복을 확인하는 함수
 def check_duplicate_code():
     while True:
 
@@ -22,7 +77,7 @@ def check_duplicate_code():
             return code     # 중복안된 제품번호
 
         
-    # 제품등록을 수행하는 함수
+# 제품등록을 수행하는 함수
 def insert_product():       #-> 지역변수라 함수끝나면 삭제됨. 정보 저장해둘 리스트를 전역변수에 만들어줘야한다
     product ={}
     print('\n# 제품 정보 등록을 시작합니다.')
@@ -35,8 +90,9 @@ def insert_product():       #-> 지역변수라 함수끝나면 삭제됨. 정�
 
     inventory.append(product)
     print('# 제품 등록 완료')
+    save_inventory()
 
-    # 메뉴를 출력하는 함수
+# 메뉴를 출력하는 함수
 def show_menu():
     print('\n*** 재고 관리 프로그램 ***')
     print('#1. 제품 정보 등록하기')
@@ -46,7 +102,7 @@ def show_menu():
     print('#5. 제품 정보 삭제하기')
     print('#6. 프로그램 종료하기')
 
-    # 프로그램 종료처리 함수
+# 프로그램 종료처리 함수
 def exit_program():
     import sys
     print('\n# 프로그램을 종료합니다. [Y/N]')
@@ -56,7 +112,7 @@ def exit_program():
     else:
         return
 
-    # 제품정보 출력 머리말 부분
+# 제품정보 출력 머리말 부분
 def header_print():
     print('\n\t\t*** 창고 재고 정보 ***')
     print('=' * 60)
@@ -65,7 +121,7 @@ def header_print():
     print('=' * 60)
 
 
-    # 모든 제품정보를 출력하는 함수
+# 모든 제품정보를 출력하는 함수
 def print_all_products():
     header_print()
 
@@ -77,20 +133,20 @@ def print_all_products():
     print('=' * 60)
     print(f'\t\t창고 전체 재고 총액: {total_price}원')
 
-    # 제품코드를 입력받는 함수
+# 제품코드를 입력받는 함수
 def input_code(msg):
     print(f'# {msg}하실 제품의 번호를 입력하세요.')
     code = input('>> ')
     return code
 
-    # 제품번호로 해당 제품을 찾아오는 함수
+# 제품번호로 해당 제품을 찾아오는 함수
 def get_product(code):
     for product in inventory:
         if code == product['제품번호']:
             return product
     return {}   # if문의 조건에 해당하는걸 못찾을 경우 상징적으로 빈 딕셔너리 리턴
 
-    #개별 제품 조회 처리 함수
+#개별 제품 조회 처리 함수
 def search_product():
     code = input_code('조회')
     product = get_product(code)
@@ -102,7 +158,7 @@ def search_product():
     else:
         print('# 존재하지 않는 제품입니다.')
 
-    #제품정보 수정 처리 함수
+#제품정보 수정 처리 함수
 def modify_product():
     code = input_code('수정')
     product = get_product(code)
@@ -130,9 +186,10 @@ def modify_product():
 
     else:
         print('{} 제품코드에 해당하는 제품 정보가 등록되지 않았습니다.' .format(code))
+    save_inventory()
             
 
-    #제품정보 삭제 처리 함수
+#제품정보 삭제 처리 함수
 def delete_product():
     code = input_code('삭제')
     product = get_product(code)
@@ -143,15 +200,16 @@ def delete_product():
 
     else:    
         print('[{}] 제품코드에 해당하는 제품 정보가 등록되지 않았습니다.' .format(code))
-
+    save_inventory()
 
 
 
 
 
 #실행부
-if __name__ == '__main__':
-    
+if __name__ == '__main__':    
+    load_inventory()
+
     while True:
         show_menu()
         
