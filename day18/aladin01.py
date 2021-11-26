@@ -35,16 +35,23 @@ for boox_box in div_book_box_list:
     if len(li_list) == 4:
         title = li_list[0].text
         info = li_list[1].text
+        price = li_list[2].text
     else:
         title = li_list[1].text
         info = li_list[2].text
+        price = li_list[3].text
 
     # info 세가지 데이터로 분해
     info_list = info.split('|')
     author, company, pub_date = info_list
 
+    # price 에서 할인 후 가격만 추출
+    price = price.split('(')[0]
+    price = price[ price.find('→')+1 : ].strip()
+
     print(title)
     print(author.strip())
     print(company.strip())
     print(pub_date.strip())
+    print(price)
     print('='*50)
