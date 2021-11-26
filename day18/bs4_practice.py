@@ -89,16 +89,18 @@ from bs4 import BeautifulSoup
 soup = BeautifulSoup(html, 'html.parser') # 텍스트를 html형태로 바꿔줌
 
 
+print('=' * 40)
 '''
-# 첫번째 뉴스기사의 제목과 신문사 이름 추출
-title_list = soup.select('.cont_thumb > .tit_thumb > a')
-print(f'첫번째 뉴스기사 제목: {title_list.text}')
+# 기사 제목 추출 
+title = soup.select_one('.cont_thumb > strong > a')
+print(title.text)
 
+# 신문사 이름 추출
 newspaper_name = soup.select_one('.cont_thumb > .info_thumb')
 txt = newspaper_name.text.strip()
-txt = txt[0: txt.find('·')].strip()
 
-print(f'첫번째 뉴스기사 신문사: {txt}')
+txt = txt[0: txt.find('·')].strip()
+print(txt)
 '''
 
 cont_list = soup.select('.cont_thumb')
@@ -106,10 +108,8 @@ cont_list = soup.select('.cont_thumb')
 # print(cont_list)
 
 for div in cont_list:
-    #find로 찾는 법
-    # title = div.find('a',class_='link_txt').text
-    #select_one으로 찾는 법
-    title = div.select_one('strong> a.link_txt').text
+    # title = div.find('a', class_='link_txt').text
+    title = div.select_one('strong > a.link_txt').text
     print(title)
 
     newspaper_name = div.select_one('.info_thumb')
@@ -117,4 +117,4 @@ for div in cont_list:
     txt = txt[0: txt.find('·')].strip()
     print(txt)
 
-    print('='*40)
+    print('=' * 40)
