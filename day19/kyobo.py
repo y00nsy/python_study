@@ -38,7 +38,7 @@ styles = {
 cell_format = workbook.add_format(styles)
 
 worksheet.write('A1', '순위', cell_format)
-# worksheet.write('B1', '썸네일', cell_format)
+worksheet.write('B1', '썸네일', cell_format)
 worksheet.write('C1', '저자', cell_format)
 worksheet.write('D1', '출판사', cell_format)
 worksheet.write('E1', '출판일', cell_format)
@@ -98,6 +98,8 @@ for n in range(1, 2):
 
             author = info2[0] # if문 걸리는 부분만 info2의 0번 인덱스
         
+        img_tag = book_info.select_one('.cover > a > img')
+        img_src = img_tag['src']
 
         print(rank)
         print(title)
@@ -106,6 +108,12 @@ for n in range(1, 2):
         print(pub_date.strip())
         print('=' *40)
         
+        #엑셀에 이미지 저장
+        # worksheet.write('B1','썸네일')
+        # 이미지경로를 통해 이미지 다운
+        img_data = BytesIO(req.urlopen(img_src).read())
+        worksheet.insert_image(f'B{rank+1}', img_src, {'image_data':img_data})
+
         # 엑셀에 데이터 저장
         worksheet.write(f'A{rank+1}',rank)
         worksheet.write(f'C{rank+1}',author)
