@@ -39,9 +39,10 @@ cell_format = workbook.add_format(styles)
 
 worksheet.write('A1', '순위', cell_format)
 worksheet.write('B1', '썸네일', cell_format)
-worksheet.write('C1', '저자', cell_format)
-worksheet.write('D1', '출판사', cell_format)
-worksheet.write('E1', '출판일', cell_format)
+worksheet.write('C1', '책제목', cell_format)
+worksheet.write('D1', '저자', cell_format)
+worksheet.write('E1', '출판사', cell_format)
+worksheet.write('F1', '출판일', cell_format)
 # worksheet.write('F1', '좋아요수', cell_format)
 
 
@@ -61,11 +62,11 @@ browser.get('http://www.kyobobook.co.kr/bestSellerNew/bestseller.laf')
 
 ######### 핵심 로직 ###########
 
-
+rank = 1
 #순위 탭 클릭
 # 1위~20위 : main_contents > div:nth-child(6) > div.list_paging > ul > li:nth-child((1) > strong > a
 # 21위~30위 : main_contents > div:nth-child(6) > div.list_paging > ul > li:nth-child(2) > a
-for n in range(1, 2):
+for n in range(1, 11):
     if n > 1:
         browser.find_element_by_css_selector(f'#main_contents > div:nth-child(6) > div.list_paging > ul > li:nth-child({n}) > a').click()
     t.sleep(1)
@@ -81,7 +82,7 @@ for n in range(1, 2):
     for book_info in best_list:
         
         rank = int(book_info.select_one('.cover> a > strong.rank').text.strip())
-        title = book_info.select_one('.title > a> strong').text.strip()
+        title = book_info.select_one('.title > a > strong').text.strip()
         
         info_tag = book_info.select_one('.author')
         info = info_tag.text.strip()
@@ -116,10 +117,13 @@ for n in range(1, 2):
 
         # 엑셀에 데이터 저장
         worksheet.write(f'A{rank+1}',rank)
-        worksheet.write(f'C{rank+1}',author)
-        worksheet.write(f'D{rank+1}',company)
-        worksheet.write(f'E{rank+1}',pub_date)
+        worksheet.write(f'C{rank+1}',title)
+        worksheet.write(f'D{rank+1}',author)
+        worksheet.write(f'E{rank+1}',company)
+        worksheet.write(f'F{rank+1}',pub_date)
         #worksheet.write(f'F{rank+1}',like)
+
+        rank += 1
         
 browser.close()
 workbook.close()
